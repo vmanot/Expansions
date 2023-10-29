@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
     name: "Expansions",
     platforms: [
-        .iOS(.v16),
-        .macOS(.v13),
-        .tvOS(.v16),
+        .iOS(.v14),
+        .macOS(.v12),
+        .tvOS(.v14),
         .watchOS(.v9)
     ],
     products: [
@@ -25,7 +25,7 @@ let package = Package(
     ],
     targets: [
         .macro(
-            name: "Expansions_Macros",
+            name: "ExpansionsMacros",
             dependencies: [
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
@@ -34,12 +34,12 @@ let package = Package(
                 .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
-            path: "Sources/Expansions_Macros"
+            path: "Sources/ExpansionsMacros"
         ),
         .target(
             name: "Expansions",
             dependencies: [
-                "Expansions_Macros",
+                "ExpansionsMacros",
                 "Swallow"
             ],
             path: "Sources/Expansions"
