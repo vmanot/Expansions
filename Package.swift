@@ -15,7 +15,8 @@ let package = Package(
         .library(
             name: "Expansions",
             targets: [
-                "Expansions"
+                "Expansions",
+                "MacroBuilder"
             ]
         )
     ],
@@ -36,6 +37,14 @@ let package = Package(
             ],
             path: "Sources/ExpansionsMacros"
         ),
+        .macro(
+            name: "MacroBuilderCompilerPlugin",
+            dependencies: [
+                "MacroBuilderCore",
+                "Swallow"
+            ],
+            path: "Sources/MacroBuilderCompilerPlugin"
+        ),
         .target(
             name: "Expansions",
             dependencies: [
@@ -43,6 +52,28 @@ let package = Package(
                 "Swallow"
             ],
             path: "Sources/Expansions"
-        )
+        ),
+        .target(
+            name: "MacroBuilder",
+            dependencies: [
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftOperators", package: "swift-syntax"),
+                .product(name: "SwiftParser", package: "swift-syntax"),
+                .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                "MacroBuilderCore",
+                "Swallow"
+            ],
+            path: "Sources/MacroBuilder"
+        ),
+        .target(
+            name: "MacroBuilderCore",
+            dependencies: [
+                "ExpansionsMacros",
+                "Swallow"
+            ],
+            path: "Sources/MacroBuilderCore"
+        ),
     ]
 )

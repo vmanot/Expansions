@@ -7,7 +7,7 @@ import Swift
 
 public final class RuntimeDiscoverableTypes {
     private static var cache: [Any.Type]?
-
+    
     public static func enumerate() -> [Any.Type] {
         if let cache = cache {
             return cache
@@ -26,6 +26,13 @@ public final class RuntimeDiscoverableTypes {
         return result
     }
     
+    public static func enumerate<T, U>(
+        _ type: T.Type,
+        as resultType: Array<U>.Type = Array<U>.self
+    ) -> [U] {
+        _enumerateConformingTypes(conformingTo: type, as: resultType)
+    }
+
     public static func _enumerateConformingTypes<T, U>(
         conformingTo type: T.Type = T.self,
         as resultType: Array<U>.Type = Array<U>.self
