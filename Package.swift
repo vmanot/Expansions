@@ -16,7 +16,8 @@ let package = Package(
             name: "Expansions",
             targets: [
                 "Expansions",
-                "MacroBuilder"
+                "MacroBuilder",
+                "SwiftSyntaxUtilities",
             ]
         )
     ],
@@ -28,6 +29,7 @@ let package = Package(
         .macro(
             name: "ExpansionsMacros",
             dependencies: [
+                .product(name: "SwiftDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftOperators", package: "swift-syntax"),
@@ -56,14 +58,15 @@ let package = Package(
         .target(
             name: "MacroBuilder",
             dependencies: [
+                "Expansions",
+                "MacroBuilderCore",
+                "Swallow",
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftOperators", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
                 .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-                "MacroBuilderCore",
-                "Swallow"
             ],
             path: "Sources/MacroBuilder"
         ),
@@ -71,9 +74,22 @@ let package = Package(
             name: "MacroBuilderCore",
             dependencies: [
                 "ExpansionsMacros",
-                "Swallow"
+                "Swallow",
             ],
             path: "Sources/MacroBuilderCore"
+        ),
+        .target(
+            name: "SwiftSyntaxUtilities",
+            dependencies: [
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftOperators", package: "swift-syntax"),
+                .product(name: "SwiftParser", package: "swift-syntax"),
+                .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                "Swallow",
+            ],
+            path: "Sources/SwiftSyntaxUtilities"
         ),
     ]
 )

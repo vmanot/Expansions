@@ -9,7 +9,8 @@ import SwiftSyntaxMacros
 public struct module: CompilerPlugin {
     public let providingMacros: [Macro.Type] = [
         AddCaseBooleanMacro.self,
-        RuntimeDiscoverableMacro.self
+        HashableMacro.self,
+        RuntimeDiscoverableMacro.self,
     ]
     
     public init() {

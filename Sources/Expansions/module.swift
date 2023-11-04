@@ -33,6 +33,10 @@ public macro AddCaseBoolean() = #externalMacro(
     type: "AddCaseBooleanMacro"
 )
 
+@attached(member, names: named(hash), named(==))
+@attached(extension, conformances: Hashable)
+public macro Hashable() = #externalMacro(module: "ExpansionsMacros", type: "HashableMacro")
+
 @attached(peer, names: suffixed(_RuntimeTypeDiscovery))
 public macro RuntimeDiscoverable() = #externalMacro(
     module: "ExpansionsMacros",

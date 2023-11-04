@@ -61,8 +61,37 @@ public struct RuntimeDiscoverableMacro: PeerMacro {
             )
             
             return [syntax]
+        } else if let declaration = declaration.as(ExtensionDeclSyntax.self) {
+            let extendedType = declaration.extendedType.trimmed
+            
+            let syntax = DeclSyntax(
+                """
+                @objc class \(extendedType)_RuntimeTypeDiscovery: _RuntimeTypeDiscovery {
+                    override open class var type: Any.Type {
+                        \(extendedType).self
+                    }
+                
+                    override init() {
+                    
+                    }
+                }
+                """
+            )
+            
+            return [syntax]
         } else {
-            fatalError()
+            throw CustomError.message("Could not use @RuntimeDiscoverable.")
+        }
+    }
+}
+
+fileprivate enum CustomError: Error, CustomStringConvertible {
+    case message(String)
+    
+    var description: String {
+        switch self {
+            case .message(let text):
+                return text
         }
     }
 }
