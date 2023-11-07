@@ -11,6 +11,7 @@ public struct module: CompilerPlugin {
         AddCaseBooleanMacro.self,
         HashableMacro.self,
         RuntimeDiscoverableMacro.self,
+        SingletonMacro.self,
     ]
     
     public init() {

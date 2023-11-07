@@ -42,3 +42,6 @@ public macro RuntimeDiscoverable() = #externalMacro(
     module: "ExpansionsMacros",
     type: "RuntimeDiscoverableMacro"
 )
+
+@attached(member, names: named(init), named(shared))
+public macro Singleton() = #externalMacro(module: "ExpansionsMacros", type: "SingletonMacro")
