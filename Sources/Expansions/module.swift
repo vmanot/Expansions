@@ -4,29 +4,6 @@
 
 @_exported import Foundation
 
-/// A macro that generate `var isCaseNmae: Bool` computed properties per enum cases that have asociated value.
-///
-/// for example below source code
-///
-///    ```swift
-///     @AddCaseBoolean
-///     enum E {
-///         case simple
-///         case foo(Int)
-///     }
-///    ```
-///
-/// will generate `isFoo` computed property.
-///
-///    ```swift
-///    var isFoo: Bool {
-///        if case .foo = self {
-///            return true
-///        }
-///        return false
-///    }
-///    ```
-///
 @attached(member, names: arbitrary)
 public macro AddCaseBoolean() = #externalMacro(
     module: "ExpansionsMacros",
@@ -45,3 +22,11 @@ public macro RuntimeDiscoverable() = #externalMacro(
 
 @attached(member, names: named(init), named(shared))
 public macro Singleton() = #externalMacro(module: "ExpansionsMacros", type: "SingletonMacro")
+
+// MARK: - Debug
+
+@attached(peer, names: arbitrary)
+public macro duplicate(as: String) = #externalMacro(
+    module: "ExpansionsMacros",
+    type: "GenerateDuplicateMacro"
+)

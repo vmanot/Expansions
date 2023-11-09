@@ -29,6 +29,7 @@ let package = Package(
         .macro(
             name: "ExpansionsMacros",
             dependencies: [
+                "Swallow",
                 .product(name: "SwiftDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
@@ -36,6 +37,7 @@ let package = Package(
                 .product(name: "SwiftParser", package: "swift-syntax"),
                 .product(name: "SwiftParserDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                "SwiftSyntaxUtilities",
             ],
             path: "Sources/ExpansionsMacros"
         ),

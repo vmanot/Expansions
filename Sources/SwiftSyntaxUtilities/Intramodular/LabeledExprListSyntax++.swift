@@ -5,34 +5,20 @@
 import Swallow
 import SwiftSyntax
 
-extension AnyCodable {
-    public init(_ exprList: LabeledExprListSyntax) throws {
-        self = .dictionary(
-            Dictionary(
-                try exprList.map {
-                    let key = try AnyCodingKey(stringLiteral: $0.labelText.unwrap())
-                    let value = try $0.expression.decodeLiteral()
-                    
-                    return (key, value)
-                },
-                uniquingKeysWith: { lhs, rhs in
-                    assertionFailure()
-                    
-                    return rhs
-                }
-            )
-            .compactMapValues({ $0 })
-        )
-    }
-}
-
-extension LabeledExprSyntax {
-    public var labelText: String? {
-        label?.trimmed.text
-    }
-}
-
 extension ExprSyntax {
+    func _decodeLiteralValueOrAsString() throws -> AnyCodable? {
+        do {
+            return try decodeLiteral()
+        } catch {
+            if let decl = self.as(MemberAccessExprSyntax.self.self)?.base?
+                .as(DeclReferenceExprSyntax.self) {
+                return .string(decl.baseName.text)
+            } else {
+                throw _PlaceholderError()
+            }
+        }
+    }
+    
     public func decodeLiteral() throws -> AnyCodable? {
         // TODO: Improve this.
         enum _Error: Swift.Error {
@@ -66,7 +52,7 @@ extension ExprSyntax {
                     throw _Error.failure
             }
         } else {
-            fatalError()
+            throw CustomStringError(description: "Unsupported")
         }
     }
 }

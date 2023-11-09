@@ -8,8 +8,8 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-enum MacroDiagnostics {
-    struct Message: DiagnosticMessage, Error {
+enum CustomError {
+    struct _CustomErrorMessage: DiagnosticMessage, Error {
         let message: String
         let diagnosticID: MessageID
         let severity: DiagnosticSeverity
@@ -28,7 +28,7 @@ enum MacroDiagnostics {
     static func diagnostic(
         node: Syntax,
         position: AbsolutePosition? = nil,
-        message: Message,
+        message: _CustomErrorMessage,
         highlights: [Syntax]? = nil,
         notes: [Note] = [],
         fixIts: [FixIt] = []
@@ -39,12 +39,12 @@ enum MacroDiagnostics {
         )
     }
     
-    static func errorMacroUsage(message: String) -> ErrorMacroUsage {
+    static func message(_ message: String) -> ErrorMacroUsage {
         .message(message)
     }
 }
 
-extension MacroDiagnostics.Message: FixItMessage {
+extension CustomError._CustomErrorMessage: FixItMessage {
     var fixItID: MessageID {
         diagnosticID
     }
