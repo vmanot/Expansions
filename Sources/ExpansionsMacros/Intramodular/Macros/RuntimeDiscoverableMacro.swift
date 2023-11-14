@@ -29,46 +29,14 @@ public struct RuntimeDiscoverableMacro: PeerMacro {
             )
             
             return [syntax]
-        } else if let declaration = declaration.as(ClassDeclSyntax.self) {
+        } else if let declaration = declaration.asProtocol(NamedDeclSyntax.self) {
+            let name = declaration.name.text
+
             let syntax = DeclSyntax(
                 """
-                @objc class \(raw: declaration.name.text)_RuntimeTypeDiscovery: _RuntimeTypeDiscovery {
+                @objc class \(raw: name)_RuntimeTypeDiscovery: _RuntimeTypeDiscovery {
                     override open class var type: Any.Type {
-                        \(raw: declaration.name.text).self
-                    }
-                
-                    override init() {
-                    
-                    }
-                }
-                """
-            )
-            
-            return [syntax]
-        } else if let declaration = declaration.as(StructDeclSyntax.self) {
-            let syntax = DeclSyntax(
-                """
-                @objc class \(raw: declaration.name.text)_RuntimeTypeDiscovery: _RuntimeTypeDiscovery {
-                    override open class var type: Any.Type {
-                        \(raw: declaration.name.text).self
-                    }
-                
-                    override init() {
-                    
-                    }
-                }
-                """
-            )
-            
-            return [syntax]
-        } else if let declaration = declaration.as(ExtensionDeclSyntax.self) {
-            let extendedType = declaration.extendedType.trimmed
-            
-            let syntax = DeclSyntax(
-                """
-                @objc class \(extendedType)_RuntimeTypeDiscovery: _RuntimeTypeDiscovery {
-                    override open class var type: Any.Type {
-                        \(extendedType).self
+                        \(raw: name).self
                     }
                 
                     override init() {
@@ -80,7 +48,7 @@ public struct RuntimeDiscoverableMacro: PeerMacro {
             
             return [syntax]
         } else {
-            throw CustomError.message("Could not use @RuntimeDiscoverable.")
+            throw CustomError.message("Failed to use @RuntimeDiscoverable.")
         }
     }
 }

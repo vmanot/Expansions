@@ -14,6 +14,6 @@ public protocol MacrosProviding: CompilerPlugin {
 
 extension MacrosProviding {
     public var providingMacros: [Macro.Type] {
-        RuntimeDiscoverableTypes.enumerate((any Macro).self)
+        RuntimeDiscoverableTypes.enumerate(typesConformingTo: (any Macro).self)
     }
 }

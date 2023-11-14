@@ -11,6 +11,7 @@ public struct module: CompilerPlugin {
         GenerateDuplicateMacro.self,
         AddCaseBooleanMacro.self,
         HashableMacro.self,
+        OptionSetMacro.self,
         RuntimeDiscoverableMacro.self,
         SingletonMacro.self,
     ]

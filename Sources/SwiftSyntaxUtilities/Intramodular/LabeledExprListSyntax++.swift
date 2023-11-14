@@ -5,54 +5,29 @@
 import Swallow
 import SwiftSyntax
 
-extension ExprSyntax {
-    func _decodeLiteralValueOrAsString() throws -> AnyCodable? {
-        do {
-            return try decodeLiteral()
-        } catch {
-            if let decl = self.as(MemberAccessExprSyntax.self.self)?.base?
-                .as(DeclReferenceExprSyntax.self) {
-                return .string(decl.baseName.text)
-            } else {
-                throw _PlaceholderError()
+/// https://github.com/beccadax/swift-macro-examples
+extension LabeledExprListSyntax {
+    public func first(
+        labeled name: String
+    ) -> Element? {
+        return first { element in
+            if let label = element.label, label.text == name {
+                return true
             }
+            
+            return false
         }
     }
     
-    public func decodeLiteral() throws -> AnyCodable? {
-        // TODO: Improve this.
-        enum _Error: Swift.Error {
-            case failure
-        }
-        
-        if let expression = self.as(BooleanLiteralExprSyntax.self) {
-            switch expression.literal.tokenKind {
-                case .keyword(.true):
-                    return .bool(true)
-                case .keyword(.false):
-                    return .bool(false)
-                default:
-                    throw _Error.failure
+    public func last(
+        labeled name: String
+    ) -> Element? {
+        return last { element in
+            if let label = element.label, label.text == name {
+                return true
             }
-        } else if let expression = self.as(NilLiteralExprSyntax.self.self) {
-            _ = expression
             
-            return nil
-        } else if let expression = self.as(StringLiteralExprSyntax.self.self) {
-            let segment = try expression.segments
-                .toCollectionOfOne()
-                .value
-                .as(StringSegmentSyntax.self)
-                .unwrap()
-            
-            switch segment.content.tokenKind {
-                case .stringSegment(let text):
-                    return .string(text)
-                default:
-                    throw _Error.failure
-            }
-        } else {
-            throw CustomStringError(description: "Unsupported")
+            return false
         }
     }
 }

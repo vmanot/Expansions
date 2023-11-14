@@ -27,17 +27,16 @@ public final class RuntimeDiscoverableTypes {
     }
     
     public static func enumerate<T, U>(
-        _ type: T.Type,
-        as resultType: Array<U>.Type = Array<U>.self
-    ) -> [U] {
-        _enumerateConformingTypes(conformingTo: type, as: resultType)
-    }
-
-    public static func _enumerateConformingTypes<T, U>(
-        conformingTo type: T.Type = T.self,
+        typesConformingTo type: T.Type = T.self,
         as resultType: Array<U>.Type = Array<U>.self
     ) -> [U] {
         enumerate().filter({ TypeMetadata($0).conforms(to: type) }).map({ $0 as! U })
+    }
+    
+    public static func enumerate<T>(
+        typesConformingTo type: T.Type = T.self
+    ) -> [Any.Type] {
+        enumerate().filter({ TypeMetadata($0).conforms(to: type) })
     }
 }
 
@@ -48,7 +47,7 @@ public struct RuntimeDiscoveredTypes<T, U> {
     
     public init(type: T.Type) {
         self.type = type
-        self.wrappedValue = RuntimeDiscoverableTypes._enumerateConformingTypes(conformingTo: type)
+        self.wrappedValue = RuntimeDiscoverableTypes.enumerate(typesConformingTo: type)
     }
 }
 
