@@ -9,12 +9,12 @@ extension ExprSyntax {
     func _decodeLiteralValueOrAsString() throws -> AnyCodable? {
         do {
             return try decodeLiteral()
-        } catch {
+        } catch(let _error) {
             if let decl = self.as(MemberAccessExprSyntax.self.self)?.base?
                 .as(DeclReferenceExprSyntax.self) {
                 return .string(decl.baseName.text)
             } else {
-                throw _PlaceholderError()
+                throw _error
             }
         }
     }
@@ -34,13 +34,19 @@ extension ExprSyntax {
                 default:
                     throw _Error.failure
             }
-        } else if let _ = self.as(DictionaryExprSyntax.self) {
+        }
+        
+        if let _ = self.as(DictionaryExprSyntax.self) {
             fatalError()
-        } else if let expression = self.as(NilLiteralExprSyntax.self) {
+        }
+        
+        if let expression = self.as(NilLiteralExprSyntax.self) {
             _ = expression
             
             return nil
-        } else if let expression = self.as(StringLiteralExprSyntax.self) {
+        }
+        
+        if let expression = self.as(StringLiteralExprSyntax.self) {
             let segment = try expression.segments
                 .toCollectionOfOne()
                 .value
@@ -53,8 +59,34 @@ extension ExprSyntax {
                 default:
                     throw _Error.failure
             }
-        } else {
-            throw CustomStringError(description: "Unsupported")
         }
+        
+        if let expression = self.as(MemberAccessExprSyntax.self) {
+            return .string(try expression._fullName.unwrap())
+         }
+        
+        throw CustomStringError(description: "Unsupported")
+    }
+}
+
+extension MemberAccessExprSyntax {
+    // TODO: Rename
+    fileprivate var _fullName: String? {
+        guard let base else {
+            return nil
+        }
+        
+        if let base = base.as(DeclReferenceExprSyntax.self) {
+            return base.baseName.text
+        }
+        
+        if
+            let base = base.as(MemberAccessExprSyntax.self),
+            let _base = base.base?.as(DeclReferenceExprSyntax.self)
+        {
+            return _base.baseName.text + "." + base.declName.baseName.text
+        }
+        
+        return nil
     }
 }

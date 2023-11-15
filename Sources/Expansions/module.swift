@@ -41,3 +41,13 @@ public macro Singleton() = #externalMacro(
     module: "ExpansionsMacros",
     type: "SingletonMacro"
 )
+
+@attached(member, names: arbitrary)
+// @attached(extension, names: arbitrary)
+public macro _StaticProtocolMember<T>(
+    named: String,
+    type: T.Type
+) = #externalMacro(
+    module: "ExpansionsMacros",
+    type: "_StaticProtocolMember"
+)

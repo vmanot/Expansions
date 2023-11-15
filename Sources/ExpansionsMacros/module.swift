@@ -13,6 +13,7 @@ public struct module: CompilerPlugin {
         HashableMacro.self,
         OptionSetMacro.self,
         RuntimeDiscoverableMacro.self,
+        _StaticProtocolMember.self,
         SingletonMacro.self,
     ]
     
