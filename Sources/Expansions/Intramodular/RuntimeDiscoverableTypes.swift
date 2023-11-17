@@ -2,8 +2,9 @@
 // Copyright (c) Vatsal Manot
 //
 
+import Diagnostics
 import Runtime
-import Swift
+import Swallow
 
 public final class RuntimeDiscoverableTypes {
     private static var cache: [Any.Type]?
@@ -30,13 +31,25 @@ public final class RuntimeDiscoverableTypes {
         typesConformingTo type: T.Type = T.self,
         as resultType: Array<U>.Type = Array<U>.self
     ) -> [U] {
-        enumerate().filter({ TypeMetadata($0).conforms(to: type) }).map({ $0 as! U })
+        guard !TypeMetadata(type)._isInvalid else {
+            runtimeIssue("Invalid type: \(type)")
+            
+            return []
+        }
+        
+        let result = enumerate(typesConformingTo: type).map {
+            $0 as! U
+        }
+        
+        return result
     }
     
     public static func enumerate<T>(
         typesConformingTo type: T.Type = T.self
     ) -> [Any.Type] {
-        enumerate().filter({ TypeMetadata($0).conforms(to: type) })
+        let result = enumerate().filter({ TypeMetadata($0).conforms(to: type) })
+        
+        return result
     }
 }
 

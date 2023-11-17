@@ -10,9 +10,8 @@ extension ExprSyntax {
         do {
             return try decodeLiteral()
         } catch(let _error) {
-            if let decl = self.as(MemberAccessExprSyntax.self.self)?.base?
-                .as(DeclReferenceExprSyntax.self) {
-                return .string(decl.baseName.text)
+            if let decl = self.as(MemberAccessExprSyntax.self), let name = decl._fullName {
+                return .string(name)
             } else {
                 throw _error
             }
