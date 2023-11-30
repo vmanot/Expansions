@@ -3,6 +3,7 @@
 //
 
 @_exported import Foundation
+@_exported import Runtime
 
 @attached(member, names: arbitrary)
 public macro AddCaseBoolean() = #externalMacro(
