@@ -2,8 +2,9 @@
 // Copyright (c) Vatsal Manot
 //
 
+@_exported import _ExpansionsRuntime
 @_exported import Foundation
-@_exported import Runtime
+@_exported import Swallow
 
 @attached(member, names: arbitrary)
 public macro AddCaseBoolean() = #externalMacro(
